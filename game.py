@@ -17,10 +17,13 @@ def dino_tint(on_ground):
     return None                # default green on the ground
 
 
-def on_obstacle_passed(obstacle, score):
-    """Called once, the frame an obstacle finishes scrolling past the dino. Add a sound or a combo counter here."""
-    pass
+combo = 0
 
+
+def on_obstacle_passed(obstacle, score):
+    """Called once, the frame an obstacle finishes scrolling past the dino."""
+    global combo
+    combo += 1
 
 def max_jumps():
     """Return how many jumps the dino gets before it must land again (2 for a double jump), or None for the default of 1."""
@@ -104,6 +107,8 @@ class Game:
         self.reset()
 
     def reset(self):
+        global combo
+        combo = 0
         self.dino = Dino(80, GROUND_Y)
         self.obstacles = []
         self.score = 0
@@ -161,7 +166,8 @@ class Game:
 
         score_surf = self.font.render(f"Score: {self.score // 10}   Best: {self.high_score}", True, (50, 50, 50))
         screen.blit(score_surf, (WIDTH - 260, 20))
-
+        combo_surf = self.font.render(f"Combo: {combo}", True, (50, 50, 50))
+        screen.blit(combo_surf, (WIDTH - 260, 50))
         if self.state == "wait":
             msg = self.big_font.render("Press SPACE to Start", True, (80, 80, 80))
             screen.blit(msg, msg.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 10)))
